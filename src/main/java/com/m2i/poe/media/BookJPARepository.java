@@ -17,7 +17,7 @@ public class BookJPARepository implements IBookRepository {
 
     @Override
     public List<Book> getAll() throws SQLException {
-        return em.createQuery("select b from Book b").getResultList();
+        return em.createQuery("select b from Book b order by id asc").getResultList();
     }
 
     @Override
