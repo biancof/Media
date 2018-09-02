@@ -1,50 +1,93 @@
-function getPath(){
-    var res = "";
+function getParameter(str){
+    var name = "?" + str + "=";
     var url = document.location.href;
-    var param = url.substring(url.lastIndexOf("=")+1);
-    return param;
+    var idLocation = "";
+    if (url.lastIndexOf(name) < 0){
+        return "none";
+    }
+    while(url.lastIndexOf(name) != url.lastIndexOf("?")){
+        url = url.substring(0, url.lastIndexOf("?"));
+    }
+    if(url.lastIndexOf(name) == url.lastIndexOf("?")){
+        idLocation = url.substring(url.lastIndexOf(name)).substring(name.length);
+    }
+    return idLocation;
 }
 
-function getById(id){
+function getId(){
+    return getParameter("id");
+}
+
+function getTitle(){
+    return getParameter("title");
+}
+
+function getById(){
     $(function(){
         $(function(){
-            var path = "../rest/bookrest/get/" + id;
-            $.getJSON(path, function(result){
-                $.each(result, function(i, field){
-                    $("#details").append(field + " ");
-                });
-                $("#details").append("<br>");
+            var path = "../rest/bookrest/get/" + getId();
+            $.getJSON(path, function(json) {
+                  var type = json.type;
+                  var id = json.id;
+                  var price = json.price;
+                  var title = json.title;
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
             });
         });
     });
 }
 
-/*function newGetById(id){
+function getAll(){
     $(function(){
         $(function(){
-            var path = "../rest/bookrest/get/" + id;
-            $.getJSON(path, function(result){
-                $.each(result, function(i, field){
-                var item =
-                    //$("#details").append(field + " ");
+            var path = "../rest/bookrest/get/all";
+            $.getJSON(path, function(json) {
+                $.each(json, function(i, item){
+                  var type = item.type;
+                  var id = item.id;
+                  var price = item.price;
+                  var title = item.title;
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
                 });
-                $("#details").append(item + "<br>");
             });
         });
     });
-}*/
+}
 
-function executeQuery(){
-    var param = getPath();
-    if(param == "all"){
-        var count = 1;
-        while(count <= 10){
-            getById(count);
-            ++count;
+function getByTitle(title){
+    $(function(){
+        $(function(){
+            var path = "../rest/bookrest/title/" + title;
+            $.getJSON(path, function(json) {
+                $.each(json, function(i, item){
+                  var type = item.type;
+                  var id = item.id;
+                  var price = item.price;
+                  var title = item.title;
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
+                });
+            });
+        });
+    });
+}
+
+function display(){
+    var message = "";
+    var parameter = getId();
+    if (parameter == "none"){
+        parameter = getTitle();
+        if (parameter != "none"){
+            getByTitle(parameter);
         }
     } else {
-        getById(param);
+        getById();
     }
 }
 
-executeQuery();
+//getById(4);
+display();
+
+
+/*$(function(){
+    $("#tr").append("<td>test</td><td>test</td><td>test</td>");
+});*/
