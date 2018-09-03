@@ -31,7 +31,7 @@ function getById(){
                   var id = json.id;
                   var price = json.price;
                   var title = json.title;
-                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td><a href=\"detail.html?id=" + id + "\">detail</td></tr>");
             });
         });
     });
@@ -47,7 +47,7 @@ function getAll(){
                   var id = item.id;
                   var price = item.price;
                   var title = item.title;
-                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td><a href=\"detail.html?id=" + id + "\">detail</td></tr>");
                 });
             });
         });
@@ -64,14 +64,14 @@ function getByTitle(title){
                   var id = item.id;
                   var price = item.price;
                   var title = item.title;
-                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td>details</td></tr>");
+                  $("#tbody").append("<tr><td>" + id + "</td><td>" + title + "</td><td><a href=\"detail.html?id=" + id + "\">detail</td></tr>");
                 });
             });
         });
     });
 }
 
-function display(){
+function displayBooks(){
     var message = "";
     var parameter = getId();
     if (parameter == "none"){
@@ -79,13 +79,34 @@ function display(){
         if (parameter != "none"){
             getByTitle(parameter);
         }
+    } else if(parameter == "all"){
+        if(getTitle() != "none"){
+            getAll();
+        } else {
+            getByTitle();
+        }
     } else {
         getById();
     }
 }
 
+function displayBooks(){
+    $(function(){
+        $(function(){
+            var path = "../rest/bookrest/get/" + getId();
+            $.getJSON(path, function(json) {
+                $("#id").append(json.id);
+                $("#title").append(json.title);
+                $("#price").append(json.price);
+            });
+        });
+    });
+
+};
+
 //getById(4);
-display();
+displayBooks();
+displayBookDetails();
 
 
 /*$(function(){
